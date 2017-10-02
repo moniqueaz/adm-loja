@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+</head>
+<body>
+    <table id="tabela" class="table">
+        
+    </table>
+    <button id="botao" class="btn btn-default">Enviar</button>
+    <script>
+        (async()=>{
+            const dados = await fetch('/produto-api.php');
+            const produtos = await dados.json();
+            console.log(console.log(produtos));
+
+            document.querySelector('#tabela')
+                .innerHTML = produtos.map(produto =>{
+                    return `
+                        <tr>
+                            <td>${produto.nome}</td>
+                            <td>${produto.descricao}</td>
+                            <td>${produto.preco}</td>
+                            <td>${parseInt(produto.usado) ? 'usado' : 'novo'}</td>
+                        </tr>
+                    `
+                }).join('');
+            
+            document.querySelector('#botao')
+                .onclick = () =>{
+                    const produto = {
+                        nome : 'guará',
+                        descricao : 'blabla',
+                        preco : 171,
+                        usado : 0
+                    };
+
+                    const json = JSON.stringify(produto);
+                    const headers = new Headers();
+                    headers.append('Content-Type','application/json');
+                    const config = {
+                        headers,
+                        method : 'post',
+                        body : json
+                    };
+                    fetch('/recebe-json.php', config)
+                        .then(res=>{
+                            if(!res.ok) throw new Error('deu erro');
+                        })
+                        .then(()=>console.log('foi'))
+                        .catch(err=>console.log(err));
+                    /*
+                    (async()=>{
+                        try{
+                            await fetch('/recebe-json.php', config);
+                        }catch(err){
+                            console.log(err);
+                        }
+                    })();
+                    */
+                }
+        })();
+    </script>
+</body>
+</html>

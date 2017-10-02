@@ -1,0 +1,1 @@
+{"nome":"guará","descricao":"blabla","preco":171,"usado":0}
